@@ -69,33 +69,51 @@ public class TelaPrincipal extends JFrame {
         rdbtnNaoFicticio.setBounds(197, 109, 99, 23);
         contentPane.add(rdbtnNaoFicticio);
 
+        ButtonGroup grupo = new ButtonGroup();
+        grupo.add(rdbtnFicticio);
+        grupo.add(rdbtnNaoFicticio);
+
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.setBounds(93, 148, 76, 20);
         contentPane.add(btnSalvar);
 
         btnSalvar.addActionListener(e -> {
+
+            String titulo = tfTitulo.getText().trim();
+            String autor = tfAutor.getText().trim();
+
+            if (titulo.isEmpty() || autor.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
+                return;
+            }
+
+            if (titulos.contains(titulo)) {
+                JOptionPane.showMessageDialog(null, "Esse livro já está cadastrado!");
+                return;
+            }
+
             if (!rdbtnFicticio.isSelected() && !rdbtnNaoFicticio.isSelected()) {
                 JOptionPane.showMessageDialog(null, "Escolha um gênero!");
                 return;
             }
 
-            titulos.add(tfTitulo.getText());
-            autores.add(tfAutor.getText());
+            titulos.add(titulo);
+            autores.add(autor);
             generos.add(rdbtnFicticio.isSelected() ? "Fictício" : "Não Fictício");
 
             JOptionPane.showMessageDialog(null, "Livro cadastrado!");
+
+            tfTitulo.setText("");
+            tfAutor.setText("");
+            grupo.clearSelection();
         });
-        
-        ButtonGroup grupo = new ButtonGroup();
-        grupo.add(rdbtnFicticio);
-        grupo.add(rdbtnNaoFicticio);
 
         JButton btnLista = new JButton("Ver Lista");
         btnLista.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		new TelaListar().setVisible(true);
-        	dispose();
-        	}
+            public void actionPerformed(ActionEvent e) {
+                new TelaListar().setVisible(true);
+                dispose();
+            }
         });
         btnLista.setBounds(197, 148, 99, 20);
         contentPane.add(btnLista);

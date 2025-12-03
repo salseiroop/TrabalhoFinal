@@ -1,37 +1,52 @@
 package hugohenriquee;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.*;
 
 public class TelaListar extends JFrame {
 
-    private JTextArea area;
+    private JTable tabela;
+    private DefaultTableModel modelo;
 
     public TelaListar() {
         setTitle("Lista de Livros");
-        setSize(400, 300);
+        setSize(500, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
 
-        area = new JTextArea();
-        area.setEditable(false);
+        modelo = new DefaultTableModel(
+                new Object[]{"Título", "Autor", "Gênero"}, 0
+        );
 
-        JScrollPane scroll = new JScrollPane(area);
+        tabela = new JTable(modelo);
+
+        JScrollPane scroll = new JScrollPane(tabela);
         getContentPane().add(scroll, BorderLayout.CENTER);
+
+        JButton btnEmprestar = new JButton("Emprestar");
+        btnEmprestar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TelaEmprestar().setVisible(true);
+                dispose();
+            }
+        });
+
+        getContentPane().add(btnEmprestar, BorderLayout.SOUTH);
 
         exibirLivros();
     }
 
     private void exibirLivros() {
         for (int i = 0; i < TelaPrincipal.titulos.size(); i++) {
-            area.append(
-                "Título: " + TelaPrincipal.titulos.get(i) + "\n" +
-                "Autor: " + TelaPrincipal.autores.get(i) + "\n" +
-                "Gênero: " + TelaPrincipal.generos.get(i) + "\n\n"
-            );
+            modelo.addRow(new Object[]{
+                    TelaPrincipal.titulos.get(i),
+                    TelaPrincipal.autores.get(i),
+                    TelaPrincipal.generos.get(i)
+            });
         }
     }
-    
-    
 }
